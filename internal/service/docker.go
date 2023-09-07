@@ -5,6 +5,7 @@ import (
 	"encoding/base64"
 	"encoding/json"
 	"github.com/docker/docker/api/types"
+	"github.com/docker/docker/api/types/registry"
 	"github.com/docker/docker/client"
 	"github.com/gogf/gf/v2/frame/g"
 	"github.com/gogf/gf/v2/os/gfile"
@@ -50,7 +51,7 @@ func newDockerClient() *client.Client {
 }
 
 func dockerLoginStr() {
-	auth := types.AuthConfig{
+	auth := registry.AuthConfig{
 		ServerAddress: AuthArgs.IP,
 		Username:      AuthArgs.Username,
 		Password:      AuthArgs.Password,
