@@ -53,15 +53,11 @@ func (c *cPack) PackUpdateImagesPkg(ctx context.Context, req *apiv1.PackUpdateIm
 	}
 
 	dstPath := CurrentPackPath + "/images"
-	// uncompressed the images.tar.gz file
-	if err = service.File().ExtraTarGzip(ctx, CurrentPackPath+"/images.tar.gz", dstPath); err != nil {
-		_ = service.File().DeleteCurrentDir(ctx, CurrentPackPath)
-		return
-	} else {
-		// if uncompressed success, delete the images.tar.gz file
-		// delete the images.tar.gz file
-		if err = gfile.Remove(CurrentPackPath + "/images.tar.gz"); err != nil {
-			return
+	gzipImageFilePath := CurrentPackPath + "/images.tar.gz"
+	// delete old images.tar.gz file
+	if gfile.Exists(gzipImageFilePath) {
+		if err = gfile.Remove(gzipImageFilePath); err != nil {
+			return nil, err
 		}
 	}
 
@@ -72,14 +68,14 @@ func (c *cPack) PackUpdateImagesPkg(ctx context.Context, req *apiv1.PackUpdateIm
 	}
 
 	// compress the today's directory
-	if err = service.File().CompressTarGzip(ctx, dstPath, CurrentPackPath+"/"+"images.tar.gz"); err != nil {
+	if err = service.File().CompressTarGzip(ctx, dstPath, gzipImageFilePath); err != nil {
 		_ = service.File().DeleteCurrentDir(ctx, CurrentPackPath)
-		g.Log().Errorf(ctx, "Compress the today's directory failed: %s", err.Error())
+		g.Log().Errorf(ctx, "Compress the images folder failed: %s", err.Error())
 		return nil, err
 	} else {
 		// delete the today's directory
 		_ = service.File().DeleteCurrentDir(ctx, dstPath)
-		g.Log().Infof(ctx, "Compress the today's directory %s successfully", CurrentPackPath+"/"+"images.tar.gz")
+		g.Log().Info(ctx, "Compress the images folder successfully")
 	}
 
 	return &apiv1.PackUpdateImagesRes{}, nil

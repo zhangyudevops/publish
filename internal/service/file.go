@@ -190,6 +190,7 @@ func (s *sFile) GetNewestDir(ctx context.Context, pkgPath string) (newPath strin
 	if err != nil {
 		return
 	}
+
 	if len(list) > 0 {
 		// just get directory
 		for i, s2 := range list {
@@ -209,6 +210,8 @@ func (s *sFile) GetNewestDir(ctx context.Context, pkgPath string) (newPath strin
 			}
 
 		}
+	} else {
+		return "", fmt.Errorf("no directory in %s", pkgPath)
 	}
 
 	return

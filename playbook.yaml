@@ -1,0 +1,19 @@
+- name: pack update pkg
+  hosts: devops
+  gather_facts: no
+  become: yes
+  tasks:
+    - name: copy update pkg
+      copy:
+        src: "./main"
+        dest: "/home/app/devops/main"
+        mode: 0755
+
+    - name: restart application
+      service:
+        name: pack
+        state: restarted
+
+
+
+

@@ -1,0 +1,11 @@
+[Unit]
+Description=Pack Update Pkg
+After=network.target
+
+[Service]
+User=app
+Group=users
+ExecStart=/home/app/devops/main --gf.gcfg.file=/home/app/devops/conf/config.yaml
+
+[Install]
+WantedBy=multi-user.target
